@@ -1,0 +1,104 @@
+.formimg {
+    height: 250px;
+    width: 180px;
+    margin: 5px;
+}
+
+.imgdiv {
+    width: 100%;
+    overflow: auto;
+}
+
+.newcardimg {
+    display: inline-block;
+}
+
+.newcontrols {
+    display: inline-block;
+}
+
+.newcardbtn {
+    margin: 5px;
+    height: 100px;
+    width: 100px;
+    display: none;
+    float: left;
+    border: 1px solid #555555;
+    color: black;
+    text-align: center;
+    background-color: white;
+    transition-duration: 0.2s;
+}
+
+.newcardbtn:hover {
+    background-color: #555555;
+    color: white;
+}
+
+.cardbtn {
+    margin: 5px;
+    height: 75px;
+    width: 75px;
+    float: left;
+    border: 1px solid #555555;
+    color: black;
+    text-align: center;
+    background-color: white;
+    transition-duration: 0.2s;
+}
+
+.cardbtn:hover {
+    background-color: #555555;
+    color: white;
+}
+
+.card {
+    width: 180px;
+    height: 250px;
+    top: 0;
+    left: 0;
+    display: inline-block;
+    margin: 5px;
+    border: 1px solid black;
+    border-radius: 5%;
+    position: relative;
+}
+
+.bfimg {
+    height: 250px;
+    width: 180px;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.cardname {
+    font-size: medium;
+    margin: 2px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.loader {
+    border: 16px solid lightgray;
+    border-top: 16px solid lightskyblue;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    animation: spin 2s linear infinite;
+    display: none;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media screen and (max-width: 700px) {
+    .input {
+        width: 100%;
+        left: 0;
+        right: 0;
+    }
+}

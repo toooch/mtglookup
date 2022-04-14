@@ -1,0 +1,109 @@
+<!DOCTYPE Text>
+<Text lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MTG Counter Assist</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body onload="pageLoad()">
+    <div class="cardsearch">
+        <div class="searchform">
+            <form class="newcard" novalidate onsubmit="search();return false">
+                <label for="cname">Add a new card to track:</label>
+                <input type="text" id="cname" class="input" placeholder='e.g. "Black Lotus" or "Plains"'/>
+                <input type="submit" id="cardsubmit" class="input" value="Search"/>
+                <div class="loader"></div>
+            </form>
+            <p class="forminfo">⠀</p>
+            <div class="imgdiv">
+                <div class="newcardimg">
+                    <img class="formimg" src="https://c1.scryfall.com/file/scryfall-cards/png/front/b/d/bd8fa327-dd41-4737-8f19-2cf5eb1f7cdd.png?1614638838">
+                </div>
+                <div class="newcontrols">
+                    <button class="newcardbtn" onclick="addcard()">Add</button>
+                    <!-- <button class="newcardbtn">Remove</button> -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="battlefield">
+
+    </div>
+
+    <script>
+        var pageLoad = function(){
+            document.getElementById('cname').focus();
+        }
+        var requestObject;
+        var search = function(){
+            var name = document.getElementById('cname').value;
+            var msg = document.getElementsByClassName('forminfo')[0];
+            var img = document.getElementsByClassName('formimg')[0];
+            var cardbtn = document.getElementsByClassName('newcardbtn')
+            var loader = document.getElementsByClassName('loader')[0];
+            document.getElementById('cname').value = null;
+            if(name == ''){
+                msg.innerText = "No query"
+                for(let i=0; i<cardbtn.length; i++){
+                    cardbtn[i].style.display = 'none';
+                }
+            } else {
+                loader.style.display = 'block';
+                msg.innerText = 'Query: ' + name;
+                var query = name.split(' ').join('+');
+                var xhr = new XMLHttpRequest();
+                xhr.addEventListener("readystatechange", function () {
+                    if (this.readyState === this.DONE) {
+                        var t = JSON.parse(this.responseText);
+                        loader.style.display = 'none';
+                        if(t.object == "error" && t.type == "ambiguous"){
+                            msg.innerText = msg.innerText + '\nToo many cards found. Try to enter a more specific name'
+                        } else {
+                            requestObject = t;
+                            msg.innerText = `${msg.innerText}\nFound: ${t.name}`;
+                            img.src = t.image_uris.png;
+                            for(let i=0; i<cardbtn.length; i++){
+                                cardbtn[i].style.display = 'block';
+                            }
+                            console.log(t)
+                        }
+                    };
+                });
+                xhr.open("GET", `https://api.scryfall.com/cards/named?fuzzy=${query}`)
+                xhr.send();
+            }
+            console.log('Query: ' + name)
+        }
+
+        var addcard = function(){
+            console.log(requestObject)
+            var bf = document.getElementsByClassName('battlefield')[0];
+            var card = document.createElement('div');
+            card.className = 'card';
+            card.setAttribute('id', bf.children.length)
+            card.innerHTML = `
+            <h2 class="cardname">${requestObject.name}</h2>
+            <input type="button" class="cardbtn" value="Counter +">
+            <input type="button" class="cardbtn" value="Counter -">
+            <input type="button" class="cardbtn" value="Back" onclick="bfbackclick(this.parentElement.id)">
+            <input type="button" class="cardbtn" value="Delete">
+            <img src="${requestObject.image_uris.png}" class="bfimg" onclick="bfcardclick(this.parentElement.id)">
+            `
+            
+            bf.appendChild(card);
+        }
+
+        var bfcardclick = function(id){
+            var el = document.getElementsByClassName('battlefield')[0].children[id];
+            el.children[5].style.display = 'none';
+        }
+
+        var bfbackclick = function(id){
+            var el = document.getElementsByClassName('battlefield')[0].children[id];
+            el.children[5].style.display = 'block';
+        }
+    </script>
+</body>
+</Text>
