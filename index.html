@@ -12,7 +12,7 @@
         <div class="searchform">
             <form class="newcard" novalidate onsubmit="search();return false">
                 <label for="cname">Add a new card to track:</label>
-                <input type="text" id="cname" class="input" placeholder='e.g. "Black Lotus" or "Plains"' spellcheck="false">
+                <input type="text" id="cname" class="input" placeholder='e.g. Black Lotus, Plains' spellcheck="false">
                 <input type="submit" id="cardsubmit" class="input" value="Search"/>
             </form>
             <div class="loader"></div>
@@ -82,25 +82,34 @@
             card.className = 'card';
             card.setAttribute('id', bf.children.length)
             card.innerHTML = `
+            <h2 class="counter">0</h2>
             <h2 class="cardname">${requestObject.name}</h2>
-            <input type="button" class="cardbtn" value="Counter +" >
-            <input type="button" class="cardbtn" value="Counter -" >
+            <input type="button" class="cardbtn" value="Counter +" onclick="bfplus(this.parentElement.id)">
+            <input type="button" class="cardbtn" value="Counter -" onclick="bfmin(this.parentElement.id)">
             <input type="button" class="cardbtn" value="Back" onclick="bfback(this.parentElement.id)">
             <input type="button" class="cardbtn" value="Delete" onclick="bfdelete(this.parentElement.id)">
+            <div class="popup" onclick="popup()">Oracle Text
+                <span class="popuptext" id="oraclePopup">${requestObject.oracle_text}</span>
+            </div>
             <img src="${requestObject.image_uris.png}" class="bfimg" onclick="bfcardclick(this.parentElement.id)">
-            <h2 class="counter">0</h2>
+            
             `
             bf.appendChild(card);
         }
 
+        function popup() {
+            var popup = document.getElementById("oraclePopup");
+            popup.classList.toggle("show");
+        }
+
         var bfcardclick = function(id){
             var el = document.getElementsByClassName('battlefield')[0].children[id];
-            el.children[5].style.display = 'none';
+            el.children[7].style.display = 'none';
         }
 
         var bfback = function(id){
             var el = document.getElementsByClassName('battlefield')[0].children[id];
-            el.children[5].style.display = 'block';
+            el.children[7].style.display = 'block';
         }
 
         var bfdelete = function(id){
@@ -111,18 +120,18 @@
         }
 
         var bfplus = function(id){
-            var el = document.getElementsByClassName('battlefield')[0].children[id];
-            el.children[6].innerText += 1
+            var card = document.getElementsByClassName('battlefield')[0].children[id];
+            card.children[0].innerText = (Number(card.children[0].innerText) + 1)
         }
 
         var bfmin = function(id){
             var el = document.getElementsByClassName('battlefield')[0].children[id];
-            el.children[6].innerText -= 1
+            el.children[0].innerText = (Number(el.children[0].innerText) - 1)
         }
 
         document.getElementById('cname').addEventListener('focus', (e) => {
             if(screen.width <= 500){
-                document.getElementById('cardsubmit').style.width = '100%';
+                document.getElementById('cardsubmit').style.width = (screen.width - 40);
             }
         });
         document.getElementById('cname').addEventListener('blur', (e) => {
